@@ -11,6 +11,7 @@ Bug Fixes
 This is all that is planned for as of now, however I am bug testing and reaching out to friends so I can possibly make new updates and new game modes that use the same pieces
 
 Ideas of this (Though not promises)
+
 Chaos mode: All pieces spawn in at random locations with a random amount (1-3) of each except pawn that will be <6
 
 Puzzle mode: Set puzzle mode that tests skill and knowledge of the game
