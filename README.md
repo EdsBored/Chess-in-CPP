@@ -5,7 +5,6 @@ To play use commands in a 5 letter format: "e2 e4" will move the piece on e2 to 
 
 This is an early version! Here are some updates that will be done in the near future:
 Implementation of Checkmate
-Implementation of the Queen being able to move correctly
 Bug Fixes
 
 This is all that is planned for as of now, however I am bug testing and reaching out to friends so I can possibly make new updates and new game modes that use the same pieces
