@@ -12,8 +12,10 @@ class Piece {
         Piece(std::string pieceColor, int initialX, int initialY)
         : color(pieceColor), posX(initialX), posY(initialY) {}
 
-        
-
+        virtual ~Piece() {} //Destructor for proper cleanup
+        virtual char getSymbol() const = 0; //pure virtual function
+        virtual bool move(int newX, int newY, Board& board) = 0;
+        virtual bool canAttack(int targetX, int targetY, Board& board) = 0;
         int getPosX()  { return posX; }
         int getPosY()  { return posY; }
 
@@ -27,20 +29,11 @@ class Piece {
         bool isOpponent(const Piece* otherPiece) {
             return otherPiece != nullptr && otherPiece->getColor() != this->getColor();
         }
-        
-
-        
-
-        virtual bool move(int newX, int newY, Board& board) = 0;
-       
-        virtual bool canAttack(int targetX, int targetY, Board& board) = 0;
-        
         virtual void getPiece() const {
             std::cout << "Piece: " << color << " is currently at position: " << posX << ", " << posY;
         }
         
-        virtual ~Piece() {} //Destructor for proper cleanup
-        virtual char getSymbol() const = 0; //pure virtual function
+
 };
 
 class Board {
@@ -56,9 +49,6 @@ class Board {
             }
 
         }
-
-        
-        
         //Placing a piece on the board
         void placePiece(Piece* piece, int x, int y) {
             board[x][y] = piece;
@@ -106,12 +96,7 @@ class Board {
 
             // Place the piece on the new square
             board[updX][updY] = piece;
-
-            
         }
-
-        
-        
         bool isPathClear(int startX, int startY, int endX, int endY)  {
         int changeX = (endX - startX);
         int changeY = (endY - startY);
@@ -119,11 +104,9 @@ class Board {
         // Normalize the direction
         int stepX = (changeX == 0) ? 0 : (changeX > 0 ? 1 : -1);
         int stepY = (changeY == 0) ? 0 : (changeY > 0 ? 1 : -1);
-
         // Move from the starting position to the ending position
         int x = startX + stepX;
         int y = startY + stepY;
-
         while (x != endX || y != endY) {
             if (isOccupied(x, y)) {
                 return false; // Path is blocked by another piece
@@ -131,10 +114,8 @@ class Board {
             x += stepX; // Move in the X direction
             y += stepY; // Move in the Y direction
         }
-    return false;
+        return true;
 }
-
-        
 
         /*Checks if a square is currently "under attack" by any opponent piece. 
         Exclusively used for the King to not move into check*/
@@ -468,28 +449,31 @@ public:
             return (color == "white") ? 'Q' : 'q';
         }
 
-    bool move(int updX, int updY, Board& board) override {
-            int oldX;
-            int oldY;
-        // Check if the move is straight or diagonal and legitimate
-        if ((abs(updX - posX) == 0 || abs(updY - posY) == 0 || abs(updX - posX) == abs(updY - posY)) && 
-            !board.isOutOfBounds(updX, updY) && board.isPathClear(posX, posY, updX, updY)) {
-                Piece* target = board.getPiecePlacement(updX, updY);
-                if (target == nullptr || isOpponent(target)) {
-                    // Move the piece
-                    oldX = posX;
-                    oldY = posY;
-                    posX = updX;
-                    posY = updY;
-                    board.movePiece(this, posX, posY);
-                    board.removePiece(oldX, oldY);
-
-                return true;
-                    return true;
-                }
+        bool move(int updX, int updY, Board& board) override {
+                int oldX;
+                int oldY;
+            // Check if the move is diagonal
+            if ((updX != posX && updY == posY) || (updX == posX && updY != posY) || abs(updX - posX) == abs(updY - posY)) {
+                if(!board.isOutOfBounds(updX, updY)) {
+                // Check for pieces in the way
+                
+                    Piece* target = board.getPiecePlacement(updX, updY);
+                    if (target == nullptr || isOpponent(target)) {
+                        // Move the piece
+                        oldX = posX;
+                        oldY = posY;
+                        posX = updX;
+                        posY = updY;
+                        board.movePiece(this, posX, posY);
+                        board.removePiece(oldX, oldY);
+                        return true;
+                    }
+                
+            }
+            return false; // Illegal move
+            }
+        return false;
         }
-        return false; // Illegal move
-    }
     
         bool canAttack(int targetX, int targetY, Board& board) override {
         int changeX = abs(targetX - posX);

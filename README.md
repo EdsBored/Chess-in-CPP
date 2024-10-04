@@ -29,5 +29,5 @@ and I would like to implement this at some point (Once again, no promises)
 The most likely to be added is Total War Mode, and least likely is the addition of Servers. 
 As much as I'd like to implement servers, there is Chess.com for that, and it would really only be a consideration if I do go through with the modes above.
 
-Credit for Version 1.0.0 (Alpha):
+Credit for Version 1.0.1 (Alpha):
 Edsbored (As of now, I am the sole contributor, I will likely have friends help in the future)
